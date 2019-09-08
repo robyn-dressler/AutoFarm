@@ -37,7 +37,7 @@ local computerId = os.getComputerID()
 local label = "Farmer " .. computerId
 
 os.setComputerLabel(label)
-rednet.host(1, label)
+rednet.host(constants.farmProtocol, label)
 
 --Listen for commands from controller
 local controllerId, message = rednet.receive(constants.farmProtocol)
@@ -50,5 +50,6 @@ if message == constants.startMessage then
     else responseMessage = constants.readyMessage
     end
 
+    sleep(2)
     rednet.send(controllerId, responseMessage, constants.farmProtocol)
 end

@@ -20,9 +20,10 @@ local farmers = convertToTable(rednet.lookup(constants.farmProtocol))
 local ready = true
 
 --Activate farmers
-for farmerId in farmers do
+for key, farmerId in pairs(farmers) do
     print("Activating farmer " .. farmerId)
     rednet.send(farmerId, constants.startMessage, constants.farmProtocol)
+
     local id, message = rednet.receive(constants.farmProtocol)
 
     if message == constants.noFuelMessage then
