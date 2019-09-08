@@ -6,7 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-local farmProtocol = "farm"
-local startMessage = "startFarm"
-local readyMessage = "ready"
-local noFuelMessage = "noFuel"
+farmProtocol = "farm"
+startMessage = "startFarm"
+readyMessage = "ready"
+noFuelMessage = "noFuel"
