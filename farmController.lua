@@ -5,7 +5,7 @@
 -- Time: 4:03 PM
 -- To change this template use File | Settings | File Templates.
 --
-require("constants")
+local constants = require("constants")
 
 
 function convertToTable(...)
@@ -16,18 +16,18 @@ end
 rednet.open("back")
 
 --Sync with available farmers
-local farmers = convertToTable(rednet.lookup(farmProtocol))
+local farmers = convertToTable(rednet.lookup(constants.farmProtocol))
 local ready = true
 
 --Activate farmers
 for farmerId in farmers do
     print("Activating farmer " .. farmerId)
-    rednet.send(farmerId, startMessage, farmProtocol)
-    local id, message = rednet.receive(farmProtocol)
+    rednet.send(farmerId, constants.startMessage, constants.farmProtocol)
+    local id, message = rednet.receive(constants.farmProtocol)
 
-    if message == noFuelMessage then
+    if message == constants.noFuelMessage then
         print("ERROR: Farmer " .. id .. " has no fuel!")
-    elseif message == readyMessage then
+    elseif message == constants.readyMessage then
         print("Farmer " .. id .. " is ready!")
     end
 end

@@ -5,7 +5,7 @@
 -- Time: 11:27 PM
 -- To change this template use File | Settings | File Templates.
 --
-require("constants")
+local constants = require("constants")
 
 
 function refuel()
@@ -40,15 +40,15 @@ os.setComputerLabel(label)
 rednet.host(1, label)
 
 --Listen for commands from controller
-local controllerId, message = rednet.receive(farmProtocol)
+local controllerId, message = rednet.receive(constants.farmProtocol)
 
-if message == startMessage then
+if message == constants.startMessage then
     local responseMessage
     local fuelStatus = refuel()
 
-    if not fuelStatus then responseMessage = noFuelMessage
-    else responseMessage = readyMessage
+    if not fuelStatus then responseMessage = constants.noFuelMessage
+    else responseMessage = constants.readyMessage
     end
 
-    rednet.send(controllerId, responseMessage, farmProtocol)
+    rednet.send(controllerId, responseMessage, constants.farmProtocol)
 end
