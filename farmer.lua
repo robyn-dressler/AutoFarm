@@ -7,7 +7,6 @@
 --
 local constants = require("constants")
 
-
 function refuel()
     local success = true
 
@@ -28,6 +27,27 @@ function refuel()
     return success
 end
 
+function getRequiredFuel(width, length)
+    return width*length + (width - 1)*(length % 2) + length
+end
+
+function getTotalFuel()
+    --Initial fuel
+    local total = turtle.getFuelLevel()
+
+    --Scan for fuel items, and calculate total fuel
+    for i=1,16 do
+        local itemData = turtle.getItemDetail(i)
+        local fuelMultiplier = constants.fuelValues[itemData.name]
+
+        if fuelMultiplier then
+            total = total + itemData.count*fuelMultiplier
+        end
+    end
+
+    return total
+end
+
 
 --BEGIN MAIN SCRIPT
 rednet.open("right")
@@ -42,14 +62,24 @@ rednet.host(constants.farmProtocol, label)
 --Listen for commands from controller
 local controllerId, message = rednet.receive(constants.farmProtocol)
 
-if message == constants.startMessage then
+if message.type == constants.checkStatusMessage then
     local responseMessage
     local fuelStatus = refuel()
+    local requiredFuel = getRequiredFuel()
+    local totalFuel = getTotalFuel()
 
-    if not fuelStatus then responseMessage = constants.noFuelMessage
-    else responseMessage = constants.readyMessage
+    if not fuelStatus then
+        responseMessage = { type = constants.noFuelMessage }
+    elseif totalFuel < requiredFuel then
+        responseMessage = {
+            type = constants.notEnoughFuelMessage,
+            requiredFuel = requiredFuel,
+            totalFuel = totalFuel
+        }
+    else responseMessage = { type = constants.readyMessage }
     end
 
+    --Wait until controller is ready to receive, then send response
     sleep(2)
     rednet.send(controllerId, responseMessage, constants.farmProtocol)
 end

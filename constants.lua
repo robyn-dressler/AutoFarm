@@ -7,9 +7,18 @@
 --
 local constants = {
     farmProtocol = "farm",
+    checkStatusMessage = "checkStatus",
     startMessage = "startFarm",
     readyMessage = "ready",
-    noFuelMessage = "noFuel"
+    noFuelMessage = "noFuel",
+    notEnoughFuelMessage = "notEnoughFuel",
+    farmWidth = 10,
+    farmLength = 10,
+    fuelValues = {
+        ["minecraft:coal"] = 80,
+        ["minecraft:coal_block"] = 720,
+        ["railcraft:fuel.coke"] = 320
+    }
 }
 
 return constants

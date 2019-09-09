@@ -22,13 +22,19 @@ local ready = true
 --Activate farmers
 for key, farmerId in pairs(farmers) do
     print("Activating farmer " .. farmerId)
-    rednet.send(farmerId, constants.startMessage, constants.farmProtocol)
+    rednet.send(farmerId, { type = constants.checkStatusMessage }, constants.farmProtocol)
 
     local id, message = rednet.receive(constants.farmProtocol)
 
-    if message == constants.noFuelMessage then
+    if message.type == constants.noFuelMessage then
         print("ERROR: Farmer " .. id .. " has no fuel!")
-    elseif message == constants.readyMessage then
+        ready = false
+
+    elseif message.type == constants.notEnoughFuelMessage then
+        print("Farmer " .. id .. " doesn't have enough fuel. Required fuel: " .. message.requiredFuel .. " Current fuel: " .. message.totalFuel)
+        ready = false
+
+    elseif message.type == constants.readyMessage then
         print("Farmer " .. id .. " is ready!")
     end
 end
