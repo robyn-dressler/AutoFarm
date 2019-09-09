@@ -62,34 +62,37 @@ local label = "Farmer " .. computerId
 os.setComputerLabel(label)
 rednet.host(constants.farmProtocol, label)
 
---Listen for commands from controller
-local controllerId, message = rednet.receive(constants.farmProtocol)
+while true do
+    --Listen for commands from controller
+    local controllerId, message = rednet.receive(constants.farmProtocol)
 
---Handle status check
-if message.type == constants.checkStatusMessage then
+    --Handle status check
+    if message.type == constants.checkStatusMessage then
 
-    --Refuel, check required fuel levels, and report back to controller
-    local responseMessage
-    local fuelStatus = refuel()
-    local requiredFuel = getRequiredFuel(constants.farmWidth, constants.farmLength)
-    local totalFuel = getTotalFuel()
+        --Refuel, check required fuel levels, and report back to controller
+        local responseMessage
+        local fuelStatus = refuel()
+        local requiredFuel = getRequiredFuel(constants.farmWidth, constants.farmLength)
+        local totalFuel = getTotalFuel()
 
-    if not fuelStatus then
-        responseMessage = { type = constants.noFuelMessage }
-    elseif totalFuel < requiredFuel then
-        responseMessage = {
-            type = constants.notEnoughFuelMessage,
-            requiredFuel = requiredFuel,
-            totalFuel = totalFuel
-        }
-    else responseMessage = { type = constants.readyMessage }
+        if not fuelStatus then
+            responseMessage = { type = constants.noFuelMessage }
+        elseif totalFuel < requiredFuel then
+            responseMessage = {
+                type = constants.notEnoughFuelMessage,
+                requiredFuel = requiredFuel,
+                totalFuel = totalFuel
+            }
+        else responseMessage = { type = constants.readyMessage }
+        end
+
+        --Wait until controller is ready to receive, then send response
+        sleep(2)
+        rednet.send(controllerId, responseMessage, constants.farmProtocol)
+
+    --Handle signal to start farming
+    elseif message.type == constants.startMessage then
+        sleep(5)
+        rednet.send(controllerId, { type = constants.finishedMessage }, constants.farmProtocol)
     end
-
-    --Wait until controller is ready to receive, then send response
-    sleep(2)
-    rednet.send(controllerId, responseMessage, constants.farmProtocol)
-
-elseif message.type == constants.startMessage then
-    sleep(5)
-    rednet.send(controllerId, { type = constants.finishedMessage }, constants.farmProtocol)
 end

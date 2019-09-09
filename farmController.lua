@@ -55,6 +55,7 @@ else
     while farmerCount > 0 do
         local id, message = rednet.receive(constants.farmProtocol)
         if message.type == constants.finishedMessage then
+            farmerCount = farmerCount - 1
             print("Farmer " .. id .. " finished farming!")
         end
     end
