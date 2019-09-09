@@ -18,10 +18,13 @@ rednet.open("back")
 --Sync with available farmers
 local farmers = convertToTable(rednet.lookup(constants.farmProtocol))
 local ready = true
+local farmerCount = 0
 
---Activate farmers
+--Check farmers' statuses
 for key, farmerId in pairs(farmers) do
-    print("Activating farmer " .. farmerId)
+    farmerCount = farmerCount + 1
+
+    print("Checking status of farmer " .. farmerId)
     rednet.send(farmerId, { type = constants.checkStatusMessage }, constants.farmProtocol)
 
     local id, message = rednet.receive(constants.farmProtocol)
@@ -40,5 +43,21 @@ for key, farmerId in pairs(farmers) do
 end
 
 if not ready then
-   exit()
+   return
+else
+    --Activate farmers
+    print("Activating all farmers...")
+    rednet.broadcast({ type = constants.startMessage }, constants.farmProtocol)
+
+    print("Farming in progress...")
+
+    --Wait for farmers to finish
+    while farmerCount > 0 do
+        local id, message = rednet.receive(constants.farmProtocol)
+        if message.type == constants.finishedMessage then
+            print("Farmer " .. id .. " finished farming!")
+        end
+    end
+
+    println("Farming completed!")
 end

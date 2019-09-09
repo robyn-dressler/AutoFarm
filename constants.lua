@@ -12,6 +12,7 @@ local constants = {
     readyMessage = "ready",
     noFuelMessage = "noFuel",
     notEnoughFuelMessage = "notEnoughFuel",
+    finishedMessage = "finishedMessage",
     farmWidth = 10,
     farmLength = 10,
     fuelValues = {

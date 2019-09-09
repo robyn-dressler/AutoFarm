@@ -65,7 +65,10 @@ rednet.host(constants.farmProtocol, label)
 --Listen for commands from controller
 local controllerId, message = rednet.receive(constants.farmProtocol)
 
+--Handle status check
 if message.type == constants.checkStatusMessage then
+
+    --Refuel, check required fuel levels, and report back to controller
     local responseMessage
     local fuelStatus = refuel()
     local requiredFuel = getRequiredFuel(constants.farmWidth, constants.farmLength)
@@ -85,4 +88,8 @@ if message.type == constants.checkStatusMessage then
     --Wait until controller is ready to receive, then send response
     sleep(2)
     rednet.send(controllerId, responseMessage, constants.farmProtocol)
+
+elseif message.type == constants.startMessage then
+    sleep(5)
+    rednet.send(controllerId, { type = constants.finishedMessage }, constants.farmProtocol)
 end
