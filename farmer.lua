@@ -38,10 +38,13 @@ function getTotalFuel()
     --Scan for fuel items, and calculate total fuel
     for i=1,16 do
         local itemData = turtle.getItemDetail(i)
-        local fuelMultiplier = constants.fuelValues[itemData.name]
 
-        if fuelMultiplier then
-            total = total + itemData.count*fuelMultiplier
+        if itemData then
+            local fuelMultiplier = constants.fuelValues[itemData.name]
+
+            if fuelMultiplier then
+                total = total + itemData.count*fuelMultiplier
+            end
         end
     end
 
@@ -65,7 +68,7 @@ local controllerId, message = rednet.receive(constants.farmProtocol)
 if message.type == constants.checkStatusMessage then
     local responseMessage
     local fuelStatus = refuel()
-    local requiredFuel = getRequiredFuel()
+    local requiredFuel = getRequiredFuel(constants.farmWidth, constants.farmLength)
     local totalFuel = getTotalFuel()
 
     if not fuelStatus then
