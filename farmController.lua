@@ -46,7 +46,7 @@ if not ready then
    return
 else
     --Activate farmers
-    print("Activating all farmers...")
+    print("Activating all " .. farmerCount .. " farmers...")
     rednet.broadcast({ type = constants.startMessage }, constants.farmProtocol)
 
     print("Farming in progress...")
@@ -60,5 +60,5 @@ else
         end
     end
 
-    println("Farming completed!")
+    print("Farming completed!")
 end

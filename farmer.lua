@@ -51,6 +51,25 @@ function getTotalFuel()
     return total
 end
 
+--Moves forward, collects wheat, and places the seed
+function doFarm()
+    turtle.forward()
+    turtle.digDown()
+    turtle.suckDown()
+
+    --Scan for seeds and select the slot
+    for i=1,16 do
+        local itemData = turtle.getItemDetail(i)
+
+        if itemData and itemData.name == "minecraft:wheat_seeds" then
+            turtle.select(i)
+            break
+        end
+    end
+
+    turtle.placeDown()
+end
+
 
 --BEGIN MAIN SCRIPT
 rednet.open("right")
@@ -92,7 +111,54 @@ while true do
 
     --Handle signal to start farming
     elseif message.type == constants.startMessage then
-        sleep(5)
+
+        --Variables to keep track of position
+        local x = 0
+        local y = -1
+        local xCounter = 0
+        local yCounter = 1
+
+        --Repeat a zigzag pattern within the farm boundaries
+        repeat
+            doFarm()
+            x = x + xCounter
+            y = y + yCounter
+
+            --Handle turns
+            if x == 0 and y % 2 == 1 then
+                turtle.turnRight()
+                xCounter = 1
+                yCounter = 0
+            elseif x == 1 and y % 2 == 1 then
+                turtle.turnRight()
+                xCounter = 0
+                yCounter = 1
+            elseif x == constants.farmWidth - 1 and y % 2 == 0 then
+                turtle.turnLeft()
+                xCounter = -1
+                yCounter = 0
+            elseif x == constants.farmWidth - 2 and y % 2 == 0 then
+                turtle.turnLeft()
+                xCounter = 0
+                yCounter = 1
+            end
+
+        until y == constants.farmLength - 1 and ((x == 0 and constants.farmLength % 2 == 0) or (x == constants.farmWidth - 1 and constants.farmLength % 2 == 1))
+
+        --If x coord needs adjusting, move left
+        if x == constants.farmWidth - 1 then
+            turtle.turnLeft()
+            for i=1, constants.farmWidth - 1 do
+                turtle.forward()
+            end
+            turtle.turnRight()
+        end
+
+        for i=1, constants.farmLength do
+            turtle.back()
+        end
+
+        --Finished farming
         rednet.send(controllerId, { type = constants.finishedMessage }, constants.farmProtocol)
     end
 end
