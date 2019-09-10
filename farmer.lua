@@ -53,9 +53,10 @@ end
 
 --Moves forward, collects wheat, and places the seed
 function doFarm()
+    refuel()
     turtle.forward()
 
-    --[[turtle.digDown()
+    turtle.digDown()
     turtle.suckDown()
 
     --Scan for seeds and select the slot
@@ -68,7 +69,7 @@ function doFarm()
         end
     end
 
-    turtle.placeDown()]]
+    turtle.placeDown()
 end
 
 
@@ -92,7 +93,7 @@ while true do
         --Refuel, check required fuel levels, and report back to controller
         local responseMessage
         local fuelStatus = refuel()
-        local requiredFuel = getRequiredFuel(constants.farmWidth, constants.farmLength)
+        local requiredFuel = getRequiredFuel(args[1] or constants.farmWidth, args[2] or constants.farmLength)
         local totalFuel = getTotalFuel()
 
         if not fuelStatus then
