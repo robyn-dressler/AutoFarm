@@ -6,6 +6,10 @@
 -- To change this template use File | Settings | File Templates.
 --
 local constants = require("constants")
+local args = {... }
+
+local width = args[1] or constants.farmWidth
+local length = args[2] or constants.farmLength
 
 function refuel()
     local success = true
@@ -93,7 +97,7 @@ while true do
         --Refuel, check required fuel levels, and report back to controller
         local responseMessage
         local fuelStatus = refuel()
-        local requiredFuel = getRequiredFuel(args[1] or constants.farmWidth, args[2] or constants.farmLength)
+        local requiredFuel = getRequiredFuel(width, length)
         local totalFuel = getTotalFuel()
 
         if not fuelStatus then
@@ -135,28 +139,28 @@ while true do
                 turtle.turnRight()
                 xCounter = 0
                 yCounter = 1
-            elseif x == constants.farmWidth - 1 and y % 2 == 1 then
+            elseif (x == width - 1) and (y % 2 == 1) then
                 turtle.turnLeft()
                 xCounter = -1
                 yCounter = 0
-            elseif x == constants.farmWidth - 1 and y % 2 == 0 then
+            elseif (x == width - 1) and (y % 2 == 0) then
                 turtle.turnLeft()
                 xCounter = 0
                 yCounter = 1
             end
 
-        until y == constants.farmLength - 1 and ((x == 0 and constants.farmLength % 2 == 0) or (x == constants.farmWidth - 1 and constants.farmLength % 2 == 1))
+        until y == length - 1 and ((x == 0 and length % 2 == 0) or (x == width - 1 and length % 2 == 1))
 
         --If x coord needs adjusting, move left
-        if x == constants.farmWidth - 1 then
+        if x == width - 1 then
             turtle.turnLeft()
-            for i=1, constants.farmWidth - 1 do
+            for i=1, width - 1 do
                 turtle.forward()
             end
             turtle.turnRight()
         end
 
-        for i=1, constants.farmLength do
+        for i=1, length do
             turtle.back()
         end
 
