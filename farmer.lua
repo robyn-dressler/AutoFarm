@@ -54,7 +54,8 @@ end
 --Moves forward, collects wheat, and places the seed
 function doFarm()
     turtle.forward()
-    turtle.digDown()
+
+    --[[turtle.digDown()
     turtle.suckDown()
 
     --Scan for seeds and select the slot
@@ -67,7 +68,7 @@ function doFarm()
         end
     end
 
-    turtle.placeDown()
+    turtle.placeDown()]]
 end
 
 
@@ -125,19 +126,19 @@ while true do
             y = y + yCounter
 
             --Handle turns
-            if x == 0 and y % 2 == 1 then
+            if x == 0 and y % 2 == 0 then
                 turtle.turnRight()
                 xCounter = 1
                 yCounter = 0
-            elseif x == 1 and y % 2 == 1 then
+            elseif x == 0 and y % 2 == 1 then
                 turtle.turnRight()
                 xCounter = 0
                 yCounter = 1
-            elseif x == constants.farmWidth - 1 and y % 2 == 0 then
+            elseif x == constants.farmWidth - 1 and y % 2 == 1 then
                 turtle.turnLeft()
                 xCounter = -1
                 yCounter = 0
-            elseif x == constants.farmWidth - 2 and y % 2 == 0 then
+            elseif x == constants.farmWidth - 1 and y % 2 == 0 then
                 turtle.turnLeft()
                 xCounter = 0
                 yCounter = 1
