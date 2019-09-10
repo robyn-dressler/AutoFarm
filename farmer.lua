@@ -155,12 +155,14 @@ while true do
         if x == width - 1 then
             turtle.turnLeft()
             for i=1, width - 1 do
+                refuel()
                 turtle.forward()
             end
             turtle.turnRight()
         end
 
         for i=1, length do
+            refuel()
             turtle.back()
         end
 
