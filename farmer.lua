@@ -130,29 +130,32 @@ while true do
             x = x + xCounter
             y = y + yCounter
 
-            --Handle turns
-            if x == 0 and y % 2 == 0 then
-                turtle.turnRight()
-                xCounter = 1
-                yCounter = 0
-            elseif x == 0 and y % 2 == 1 then
-                turtle.turnRight()
-                xCounter = 0
-                yCounter = 1
-            elseif (x == width - 1) and (y % 2 == 1) then
-                turtle.turnLeft()
-                xCounter = -1
-                yCounter = 0
-            elseif (x == width - 1) and (y % 2 == 0) then
-                turtle.turnLeft()
-                xCounter = 0
-                yCounter = 1
+            --Never need turns when width = 1
+            if width > 1 then
+                --Handle turns
+                if x == 0 and y % 2 == 0 and width > 1 then
+                    turtle.turnRight()
+                    xCounter = 1
+                    yCounter = 0
+                elseif x == 0 and y % 2 == 1 and width > 1 then
+                    turtle.turnRight()
+                    xCounter = 0
+                    yCounter = 1
+                elseif x == width - 1 and y % 2 == 1 then
+                    turtle.turnLeft()
+                    xCounter = -1
+                    yCounter = 0
+                elseif x == width - 1 and y % 2 == 0 then
+                    turtle.turnLeft()
+                    xCounter = 0
+                    yCounter = 1
+                end
             end
 
         until y == length - 1 and ((x == 0 and length % 2 == 0) or (x == width - 1 and length % 2 == 1))
 
         --If x coord needs adjusting, move left
-        if x == width - 1 then
+        if x == width - 1 and width ~= 1 then
             turtle.turnLeft()
             for i=1, width - 1 do
                 refuel()
