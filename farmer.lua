@@ -6,7 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 local constants = require("constants")
-local args = {... }
+local args = {...}
 
 local width = tonumber(args[1]) or constants.farmWidth
 local length = tonumber(args[2]) or constants.farmLength
@@ -70,7 +70,7 @@ function doFarm()
     for i=1,16 do
         local itemData = turtle.getItemDetail(i)
 
-        if itemData and itemData.name == "minecraft:wheat_seeds" then
+        if itemData and itemData.name == constants.seedId then
             turtle.select(i)
             break
         end

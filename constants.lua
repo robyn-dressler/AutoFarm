@@ -19,7 +19,8 @@ local constants = {
         ["minecraft:coal"] = 80,
         ["minecraft:coal_block"] = 720,
         ["railcraft:fuel.coke"] = 320
-    }
+    },
+    seedId = "harvestcraft:barleyseedItem"
 }
 
 return constants
