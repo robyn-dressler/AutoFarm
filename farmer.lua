@@ -8,8 +8,11 @@
 local constants = require("constants")
 local args = {... }
 
-local width = args[1] or constants.farmWidth
-local length = args[2] or constants.farmLength
+local width = tonumber(args[1]) or constants.farmWidth
+local length = tonumber(args[2]) or constants.farmLength
+
+print("Width: " .. width)
+print("Length: " .. length)
 
 function refuel()
     local success = true
